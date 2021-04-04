@@ -22,6 +22,11 @@
 
 
 
+
+<link href='//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css' rel='stylesheet' type='text/css' />
+
+
+
 <link rel="stylesheet" href="/css/fonts.css" media="all">
 <link rel="stylesheet" href="/css/main.css" media="all">
 
@@ -55,7 +60,7 @@
 
   <article class="article">
     
-    <span class="article-duration">0 min read</span>
+    <span class="article-duration">6 min read</span>
     
 
     <h1 class="article-title">The impact of threes</h1>
@@ -66,9 +71,336 @@
 
     <div class="article-content">
       
+<script src="/2021/04/04/the-impact-of-threes/index_files/kePrint/kePrint.js"></script>
+<link href="/2021/04/04/the-impact-of-threes/index_files/lightable/lightable.css" rel="stylesheet" />
 
 
+<pre><code>## ── Attaching packages ──────────────────────────────────────────────────────────── tidyverse 1.3.0 ──</code></pre>
+<pre><code>## ✓ ggplot2 3.3.2     ✓ purrr   0.3.4
+## ✓ tibble  3.0.3     ✓ dplyr   1.0.2
+## ✓ tidyr   1.1.1     ✓ stringr 1.4.0
+## ✓ readr   1.3.1     ✓ forcats 0.5.0</code></pre>
+<pre><code>## ── Conflicts ─────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()</code></pre>
+<pre><code>## 
+## Attaching package: &#39;scales&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:purrr&#39;:
+## 
+##     discard</code></pre>
+<pre><code>## The following object is masked from &#39;package:readr&#39;:
+## 
+##     col_factor</code></pre>
+<pre><code>## 
+## Attaching package: &#39;kableExtra&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:dplyr&#39;:
+## 
+##     group_rows</code></pre>
+<pre><code>## 
+## Attaching package: &#39;formattable&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:scales&#39;:
+## 
+##     comma, percent, scientific</code></pre>
+<pre><code>## Warning: Missing column names filled in: &#39;X1&#39; [1]</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_double(),
+##   Team = col_character(),
+##   Date = col_date(format = &quot;&quot;),
+##   Home = col_character(),
+##   Opponent = col_character(),
+##   WINorLOSS = col_character()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   Player = col_character(),
+##   `3PM` = col_number(),
+##   `3P%` = col_double(),
+##   Seasons = col_double(),
+##   Games = col_number(),
+##   `3PA` = col_number()
+## )</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_double(),
+##   Team = col_character()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<p>The 3-point shot has become a staple of NBA basketball. There’s nothing like watching 3-point marksmen such as Steph Curry, Kyle Korver, and Damian Lillard drill contested threes in the opponent’s face with perfect shooting form. These days, many NBA team’s offenses are centered around the 3-point shot, but this hasn’t always been the case.</p>
+<pre class="r"><code>attemptedthrees &lt;- allnbagames %&gt;% filter(Team == &quot;League Average&quot;) %&gt;% 
+  select(Season, `3PA`)</code></pre>
+<pre class="r"><code>ggplot(attemptedthrees, aes(x = Season, y = `3PA`)) + 
+  geom_line() +
+  scale_y_continuous(limits = c(0, 35)) +
+  geom_point(aes(x =2010, y = 18), color = &quot;gold&quot;,) +
+  annotate(&quot;text&quot;, x = 2009, y = 20, label = &quot;Steph Curry&#39;s Rookie Season&quot;) +
+   labs(title = &quot;3-point attempts increased significantly over the years.&quot;,
+       subtitle = &quot;There was a dramatic increase shortly after Steph Curry entered the league.&quot;, 
+       caption=&quot;Source: Basketball Reference | By Brett Mazour&quot;) +
+  theme_minimal() + 
+  theme(
+    plot.title = element_text(size = 16, face = &quot;bold&quot;),
+    plot.subtitle = element_text(size = 11),
+    axis.title = element_text(size = 10),
+    panel.grid.minor = element_blank()
+  )</code></pre>
+<p><img src="/2021/04/04/the-impact-of-threes/index_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>Steph Curry definitely helped create this migration to the behind the 3-point line. We have never seen someone shoot the basketball as good as him. He’s the greatest shooter to ever play, and I don’t think it’s close. I believe his style of play helped revolutionize the entire game of basketball. Don’t believe he’s the greatest shooter ever? Look at this chart of the top 10 players with the most made 3-pointers.</p>
+<pre class="r"><code>bestshooters &lt;- threeptrecords %&gt;% select(Player, `3PM`, Games, `3P%`)</code></pre>
+<pre class="r"><code>bestshooters %&gt;% 
+  kable() %&gt;% 
+  kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;condensed&quot;)) %&gt;%
+  row_spec(2, bold = T, color = &quot;white&quot;, background = &quot;#FBB93C&quot;)  </code></pre>
+<table class="table table-striped table-condensed" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Player
+</th>
+<th style="text-align:right;">
+3PM
+</th>
+<th style="text-align:right;">
+Games
+</th>
+<th style="text-align:right;">
+3P%
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Ray Allen
+</td>
+<td style="text-align:right;">
+2973
+</td>
+<td style="text-align:right;">
+1300
+</td>
+<td style="text-align:right;">
+40.0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;font-weight: bold;color: white !important;background-color: #FBB93C !important;">
+Stephen Curry
+</td>
+<td style="text-align:right;font-weight: bold;color: white !important;background-color: #FBB93C !important;">
+2683
+</td>
+<td style="text-align:right;font-weight: bold;color: white !important;background-color: #FBB93C !important;">
+739
+</td>
+<td style="text-align:right;font-weight: bold;color: white !important;background-color: #FBB93C !important;">
+43.3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Reggie Miller
+</td>
+<td style="text-align:right;">
+2560
+</td>
+<td style="text-align:right;">
+1389
+</td>
+<td style="text-align:right;">
+39.5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Kyle Korver
+</td>
+<td style="text-align:right;">
+2450
+</td>
+<td style="text-align:right;">
+1232
+</td>
+<td style="text-align:right;">
+42.9
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+James Harden
+</td>
+<td style="text-align:right;">
+2441
+</td>
+<td style="text-align:right;">
+874
+</td>
+<td style="text-align:right;">
+36.3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Vince Carter
+</td>
+<td style="text-align:right;">
+2290
+</td>
+<td style="text-align:right;">
+1541
+</td>
+<td style="text-align:right;">
+37.1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Jason Terry
+</td>
+<td style="text-align:right;">
+2282
+</td>
+<td style="text-align:right;">
+1410
+</td>
+<td style="text-align:right;">
+38.0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Jamal Crawford
+</td>
+<td style="text-align:right;">
+2221
+</td>
+<td style="text-align:right;">
+1327
+</td>
+<td style="text-align:right;">
+34.8
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Paul Pierce
+</td>
+<td style="text-align:right;">
+2143
+</td>
+<td style="text-align:right;">
+1343
+</td>
+<td style="text-align:right;">
+36.8
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Jason Kidd
+</td>
+<td style="text-align:right;">
+1988
+</td>
+<td style="text-align:right;">
+1391
+</td>
+<td style="text-align:right;">
+34.9
+</td>
+</tr>
+</tbody>
+</table>
+<p>Curry dominates the 3-point shot. We’ve never seen a player like him, and his play style has likely made other players shoot more threes. So we’ve seen the increase of players chucking threes over the years, and a reasonable explanation as to why, but how much do threes impact a game’s outcome?</p>
+<pre class="r"><code>threeptmodel &lt;- nbagames %&gt;% 
+  mutate(
+    differential = TeamPoints - OpponentPoints,
+    threeptpct = X3PointShots/X3PointShotsAttempted)</code></pre>
+<p>To determine its impact, I took a data set of all NBA games from 2014-2018 and determined every game’s point differential and the team’s 3-point percentage. Then I made a scatterplot out of those numbers looking at their correlation.</p>
+<pre class="r"><code>ggplot(threeptmodel, aes(x = differential, y = threeptpct)) +
+  geom_point() + 
+  geom_smooth(method=lm, se=TRUE) +
+  labs(x=&quot;Total Point Differential&quot;,
+       y=&quot;3-Point Percentage&quot;, 
+       title=&quot;Three point shooting impacts the final outcome of a game.&quot;, 
+       subtitle=&quot;The better a team&#39;s 3-point percentage, the more they will beat a team by.&quot;, 
+       caption=&quot;Source: Kaggle.com | By Brett Mazour&quot;) + 
+  theme_minimal() + 
+  theme(
+    plot.title = element_text(size = 16, face = &quot;bold&quot;),
+    axis.title = element_text(size = 8), 
+    plot.subtitle = element_text(size=10), 
+    panel.grid.minor = element_blank()
+    )</code></pre>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
+<p><img src="/2021/04/04/the-impact-of-threes/index_files/figure-html/unnamed-chunk-8-1.png" width="672" />
+Obviously, the better a team shoots from three, the more they will score. Now, let’s look at the R-squared value to determine how much 3-point shooting impacts point differential.</p>
+<pre class="r"><code>fit &lt;- lm(differential ~ threeptpct, data = threeptmodel)
 
+summary(fit)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = differential ~ threeptpct, data = threeptmodel)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -53.705  -8.369  -0.044   8.574  54.336 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) -19.5664     0.4807  -40.70   &lt;2e-16 ***
+## threeptpct   55.2212     1.3078   42.23   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 12.68 on 9838 degrees of freedom
+## Multiple R-squared:  0.1534, Adjusted R-squared:  0.1533 
+## F-statistic:  1783 on 1 and 9838 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>According to the R-squared value, 3-point percentage has about a 15% impact on point differential. Now, let’s compare this to how field goal percentage impacts point differential.</p>
+<pre class="r"><code>fgmodel &lt;- nbagames %&gt;% 
+  mutate(
+    differential = TeamPoints - OpponentPoints,
+    fgpct = FieldGoals/FieldGoalsAttempted)</code></pre>
+<pre class="r"><code>ggplot(fgmodel, aes(x = differential, y = fgpct)) +
+  geom_point() + 
+  geom_smooth(method=lm, se=TRUE) +
+  labs(x=&quot;Total Point Differential&quot;,
+       y=&quot;Field Goal Percentage&quot;, 
+       title=&quot;Field goal percentage impacts the game more than 3-point percentage.&quot;, 
+       subtitle=&quot;Being a great 3-point shooter isn&#39;t a necessity in the NBA.&quot;, 
+       caption=&quot;Source: Kaggle.com | By Brett Mazour&quot;) + 
+  theme_minimal() + 
+  theme(
+    plot.title = element_text(size = 16, face = &quot;bold&quot;),
+    axis.title = element_text(size = 8), 
+    plot.subtitle = element_text(size=10), 
+    panel.grid.minor = element_blank()
+    )</code></pre>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
+<p><img src="/2021/04/04/the-impact-of-threes/index_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<pre class="r"><code>fit &lt;- lm(differential ~ fgpct, data = fgmodel)
+
+summary(fit)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = differential ~ fgpct, data = fgmodel)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -51.318  -7.567   0.071   7.765  50.514 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) -62.0957     0.9802  -63.35   &lt;2e-16 ***
+## fgpct       136.2755     2.1357   63.81   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 11.59 on 9838 degrees of freedom
+## Multiple R-squared:  0.2927, Adjusted R-squared:  0.2926 
+## F-statistic:  4071 on 1 and 9838 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>According to the R-squared value, field goal percentage has about a 29% impact on point differential compared to 3-point percentage having a 15% impact. Although players have gotten better at shooting over the years, putting the ball on the floor and getting to the hoop is still more valuable than shooting. Being a good shooter is still one of the best traits you can have in the NBA. Being able to hang around the 3-point line while your man is glued to you allows players to get to the rim easier. These charts just show that you can still impact the game positively without being a good shooter. Players like Ben Simmons, and Rudy Gobert can’t shoot but are still very impactful players. Even through this dramatic increase in 3-point shooting, it still isn’t a necessity.</p>
 
     </div>
   </article>
@@ -91,6 +423,18 @@
 
     </div>
     
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/r.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/yaml.min.js"></script>
+<script>hljs.configure({languages: []}); hljs.initHighlightingOnLoad();</script>
+
+
 
     
 
