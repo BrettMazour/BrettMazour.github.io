@@ -60,7 +60,7 @@
 
   <article class="article">
     
-    <span class="article-duration">17 min read</span>
+    <span class="article-duration">18 min read</span>
     
 
     <h1 class="article-title">How the Grizzlies compare to other NBA teams</h1>
@@ -88,7 +88,8 @@
 <pre><code>## The following object is masked from &#39;package:dplyr&#39;:
 ## 
 ##     group_rows</code></pre>
-<pre class="r"><code>library(formattable)</code></pre>
+<pre class="r"><code>library(formattable)
+library(ggplot2)</code></pre>
 <pre class="r"><code>nbadefense &lt;- read_csv(&quot;major project data 2/nbamiscellaniousstats2.csv&quot;)</code></pre>
 <pre><code>## Warning: Duplicated column names deduplicated: &#39;eFG%&#39; =&gt; &#39;eFG%_1&#39; [22], &#39;TOV%&#39;
 ## =&gt; &#39;TOV%_1&#39; [23], &#39;FT/FGA&#39; =&gt; &#39;FT/FGA_1&#39; [25]</code></pre>
@@ -653,7 +654,8 @@ Gasol &lt;- nbaplayers2013 %&gt;% filter(Player == &quot;Marc Gasol&quot;)</code
 ## Warning: Ignoring unknown parameters: face
 
 ## Warning: Ignoring unknown parameters: face</code></pre>
-<p><img src="/2021/04/24/how-the-grizzlies-compare-to-other-nba-teams/index_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<p><img src="/2021/04/24/how-the-grizzlies-compare-to-other-nba-teams/index_files/figure-html/unnamed-chunk-13-1.png" width="672" />
+The Grizzlies didn’t have a superstar in 2013. Instead they built a roster consisting of many really good players who played with passion. It gave them a trip to the Western Conference Finals where they got swept.</p>
 
     </div>
   </article>
