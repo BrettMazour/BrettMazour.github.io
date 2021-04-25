@@ -6,7 +6,16 @@
     <description>Recent content on Brett&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 04 Apr 2021 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 24 Apr 2021 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>How the Grizzlies compare to other NBA teams</title>
+      <link>/2021/04/24/how-the-grizzlies-compare-to-other-nba-teams/</link>
+      <pubDate>Sat, 24 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/2021/04/24/how-the-grizzlies-compare-to-other-nba-teams/</guid>
+      <description>library(tidyverse) ## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.0 ── ## ✓ ggplot2 3.3.2 ✓ purrr 0.3.4 ## ✓ tibble 3.0.3 ✓ dplyr 1.0.2 ## ✓ tidyr 1.1.1 ✓ stringr 1.4.0 ## ✓ readr 1.3.1 ✓ forcats 0.5.0 ## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ── ## x dplyr::filter() masks stats::filter() ## x dplyr::lag() masks stats::lag() library(kableExtra) ## ## Attaching package: &amp;#39;kableExtra&amp;#39; ## The following object is masked from &amp;#39;package:dplyr&amp;#39;: ## ## group_rows library(formattable) nbadefense &amp;lt;- read_csv(&amp;quot;major project data 2/nbamiscellaniousstats2.</description>
+    </item>
+    
     <item>
       <title>The impact of threes</title>
       <link>/2021/04/04/the-impact-of-threes/</link>

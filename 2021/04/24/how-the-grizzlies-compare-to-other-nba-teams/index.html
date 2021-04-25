@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Hugo 0.81.0" />
+
+
+<title>How the Grizzlies compare to other NBA teams - Brett&#39;s Blog</title>
+<meta property="og:title" content="How the Grizzlies compare to other NBA teams - Brett&#39;s Blog">
+
+
+  <link href='/favicon.ico' rel='icon' type='image/x-icon'/>
+
+
+
+  
+
+
+
+
+
+
+
+
+<link href='//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css' rel='stylesheet' type='text/css' />
+
+
+
+<link rel="stylesheet" href="/css/fonts.css" media="all">
+<link rel="stylesheet" href="/css/main.css" media="all">
+
+
+
+  </head>
+  <body>
+    <div class="wrapper">
+      <header class="header">
+        <nav class="nav">
+  <a href="/" class="nav-logo">
+    <img src="/images/logo.png"
+         width="50"
+         height="50"
+         alt="Logo">
+  </a>
+
+  <ul class="nav-links">
+    
+    <li><a href="/about/">About</a></li>
+    
+    <li><a href="https://twitter.com/rstudio">Twitter</a></li>
+    
+  </ul>
+</nav>
+
+      </header>
+
+
+<main class="content" role="main">
+
+  <article class="article">
+    
+    <span class="article-duration">17 min read</span>
+    
+
+    <h1 class="article-title">How the Grizzlies compare to other NBA teams</h1>
+
+    
+    <span class="article-date">2021-04-24</span>
+    
+
+    <div class="article-content">
+      
+
+
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.0 ──</code></pre>
+<pre><code>## ✓ ggplot2 3.3.2     ✓ purrr   0.3.4
+## ✓ tibble  3.0.3     ✓ dplyr   1.0.2
+## ✓ tidyr   1.1.1     ✓ stringr 1.4.0
+## ✓ readr   1.3.1     ✓ forcats 0.5.0</code></pre>
+<pre><code>## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code>library(kableExtra)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;kableExtra&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:dplyr&#39;:
+## 
+##     group_rows</code></pre>
+<pre class="r"><code>library(formattable)</code></pre>
+<pre class="r"><code>nbadefense &lt;- read_csv(&quot;major project data 2/nbamiscellaniousstats2.csv&quot;)</code></pre>
+<pre><code>## Warning: Duplicated column names deduplicated: &#39;eFG%&#39; =&gt; &#39;eFG%_1&#39; [22], &#39;TOV%&#39;
+## =&gt; &#39;TOV%_1&#39; [23], &#39;FT/FGA&#39; =&gt; &#39;FT/FGA_1&#39; [25]</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_double(),
+##   Team = col_character(),
+##   Arena = col_character(),
+##   Attend. = col_number(),
+##   `Attend./G` = col_number()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre class="r"><code>nba2013 &lt;- read_csv(&quot;major project data 2/nba2013.csv&quot;)</code></pre>
+<pre><code>## Warning: Duplicated column names deduplicated: &#39;eFG%&#39; =&gt; &#39;eFG%_1&#39; [22], &#39;TOV%&#39;
+## =&gt; &#39;TOV%_1&#39; [23], &#39;FT/FGA&#39; =&gt; &#39;FT/FGA_1&#39; [25]</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_double(),
+##   Team = col_character(),
+##   Arena = col_character(),
+##   Attend. = col_number(),
+##   `Attend./G` = col_number()
+## )
+## See spec(...) for full column specifications.</code></pre>
+<pre class="r"><code>nbaplayers2013 &lt;- read_csv(&quot;major project data 2/nbaplayers2013.csv&quot;)</code></pre>
+<pre><code>## Warning: Missing column names filled in: &#39;X20&#39; [20], &#39;X25&#39; [25]</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character(),
+##   X20 = col_logical(),
+##   X25 = col_logical()
+## )
+## See spec(...) for full column specifications.</code></pre>
+<p>I’ve been a Grizzlies fan for some time, and I wanted to see how their overall performance compared to other NBA teams. I started by making a chart showing teams defensive rating that season.</p>
+<pre class="r"><code>teams &lt;- c(&quot;Utah Jazz&quot;, &quot;Los Angeles Clippers&quot;, &quot;Phoenix Suns&quot;, &quot;Milwuakee Bucks&quot;, &quot;Denver Nuggets&quot;, &quot;Philadelphia 76ers&quot;, &quot;Brooklyn Nets&quot;, &quot;Los Angeles Lakers&quot;, &quot;Boston Celtics&quot;, &quot;Atlanta Hawks&quot;, &quot;Dallas Mavericks&quot;, &quot;New York Knicks&quot;, &quot;Toronto Raptors&quot;, &quot;Golden State Warriors&quot;, &quot;Indiana Pacers&quot;, &quot;New Orleans Pelicans&quot;, &quot;Portland Trail Blazers&quot;, &quot;Miami Heat&quot;, &quot;San Antonio Spurs&quot;, &quot;Charlotte Hornets&quot;, &quot;Chicago Bulls&quot;, &quot;Detroit Pistons&quot;, &quot;Washington Wizards&quot;, &quot;Sacramento Kings&quot;, &quot;Cleveland Cavaliers&quot;, &quot;Houston Rockets&quot;, &quot;Minnesota Timberwolves&quot;, &quot;Orlando Magic&quot;, &quot;Oklahoma City Thunder&quot;)
+nbateams &lt;- nbadefense %&gt;% filter(Team %in% teams)
+
+Memphis &lt;- nbadefense %&gt;% filter(Team == &quot;Memphis Grizzlies&quot;) </code></pre>
+<p>Keep in mind that a lower defensive rating is better. Defensive rating is a measure of how many points the opponent scores in 100 possessions. Offensive rating is the opposite.</p>
+<pre class="r"><code>ggplot() +
+  geom_line(data = nbateams, aes(x = Season, y = DRtg, group = Team), color = &quot;grey&quot;) +
+  geom_line(data = Memphis, aes(x = Season, y = DRtg), color = &quot;blue&quot;) + 
+  scale_y_continuous(limits = c(95, 120)) +
+  labs(x=&quot;Season&quot;,
+       y=&quot;Defensive Rating&quot;, 
+       title=&quot;The Grizzlies dominated defensively some years.&quot;, 
+       subtitle=&quot;They have been a very above average defensive team overall for the past decade.&quot;, 
+       caption=&quot;Source: basketball-reference.com | By Brett Mazour&quot;) + 
+  theme_minimal() + 
+  theme(
+    plot.title = element_text(size = 16, face = &quot;bold&quot;),
+    axis.title = element_text(size = 8), 
+    plot.subtitle = element_text(size=10), 
+    panel.grid.minor = element_blank()
+    ) + geom_point(aes(x =2013, y = 100.4), color = &quot;black&quot;) +
+  annotate(&quot;text&quot;, x = 2013, y = 99.5, label = &quot;made WCF&quot;)</code></pre>
+<p><img src="/2021/04/24/how-the-grizzlies-compare-to-other-nba-teams/index_files/figure-html/unnamed-chunk-4-1.png" width="672" />
+They made their only Western Conference Finals appearance in 2013 during their best defensive season. After that, I compared their offensive rating to other teams.</p>
+<pre class="r"><code>ggplot() +
+  geom_line(data = nbateams, aes(x = Season, y = ORtg, group = Team), color = &quot;grey&quot;) +
+  geom_line(data = Memphis, aes(x = Season, y = ORtg), color = &quot;blue&quot;) + 
+  scale_y_continuous(limits = c(95, 120)) +
+  labs(x=&quot;Season&quot;,
+       y=&quot;Offensive Rating&quot;, 
+       title=&quot;The Grizzlies struggle offensively compared to other teams.&quot;, 
+       subtitle=&quot;Offensive Rating increased during the last couple of years.&quot;, 
+       caption=&quot;Source: basketball-reference.com | By Brett Mazour&quot;) + 
+  theme_minimal() + 
+  theme(
+    plot.title = element_text(size = 16, face = &quot;bold&quot;),
+    axis.title = element_text(size = 8), 
+    plot.subtitle = element_text(size=10), 
+    panel.grid.minor = element_blank()
+    ) + geom_point(aes(x =2013, y = 105), color = &quot;black&quot;) +
+  annotate(&quot;text&quot;, x = 2013, y = 103, label = &quot;made WCF&quot;)</code></pre>
+<p><img src="/2021/04/24/how-the-grizzlies-compare-to-other-nba-teams/index_files/figure-html/unnamed-chunk-5-1.png" width="672" />
+I know that the Grizzlies have run a slower offense in the past. I wanted to see how their pace compares to other teams.</p>
+<pre class="r"><code>ggplot() +
+  geom_line(data = nbateams, aes(x = Season, y = Pace, group = Team), color = &quot;grey&quot;) +
+  geom_line(data = Memphis, aes(x = Season, y = Pace), color = &quot;blue&quot;) + 
+  scale_y_continuous(limits = c(85, 105)) +
+  labs(x=&quot;Season&quot;,
+       y=&quot;Pace&quot;, 
+       title=&quot;The Grizzlies ran a slow paced offense for many years.&quot;, 
+       subtitle=&quot;It spiked significantly in 2019 during Morant&#39;s rookie season&quot;, 
+       caption=&quot;Source: basketball-reference.com | By Brett Mazour&quot;) + 
+  geom_point(aes(x =2019, y = 96.7), color = &quot;black&quot;) +
+  annotate(&quot;text&quot;, x = 2019, y = 98, label = &quot;Ja Morant&#39;s Rookie Season&quot;) + 
+  geom_point(aes(x =2013, y = 88.5), color = &quot;black&quot;) +
+  annotate(&quot;text&quot;, x = 2013, y = 87.5, label = &quot;made WCF&quot;)</code></pre>
+<p><img src="/2021/04/24/how-the-grizzlies-compare-to-other-nba-teams/index_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<pre class="r"><code>  theme_minimal() + 
+  theme(
+    plot.title = element_text(size = 16, face = &quot;bold&quot;),
+    axis.title = element_text(size = 8), 
+    plot.subtitle = element_text(size=10), 
+    panel.grid.minor = element_blank()
+    ) </code></pre>
+<pre><code>## List of 93
+##  $ line                      :List of 6
+##   ..$ colour       : chr &quot;black&quot;
+##   ..$ size         : num 0.5
+##   ..$ linetype     : num 1
+##   ..$ lineend      : chr &quot;butt&quot;
+##   ..$ arrow        : logi FALSE
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, &quot;class&quot;)= chr [1:2] &quot;element_line&quot; &quot;element&quot;
+##  $ rect                      :List of 5
+##   ..$ fill         : chr &quot;white&quot;
+##   ..$ colour       : chr &quot;black&quot;
+##   ..$ size         : num 0.5
+##   ..$ linetype     : num 1
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, &quot;class&quot;)= chr [1:2] &quot;element_rect&quot; &quot;element&quot;
+##  $ text                      :List of 11
+##   ..$ family       : chr &quot;&quot;
+##   ..$ face         : chr &quot;plain&quot;
+##   ..$ colour       : chr &quot;black&quot;
+##   ..$ size         : num 11
+##   ..$ hjust        : num 0.5
+##   ..$ vjust        : num 0.5
+##   ..$ angle        : num 0
+##   ..$ lineheight   : num 0.9
+##   ..$ margin       : &#39;margin&#39; num [1:4] 0points 0points 0points 0points
+##   .. ..- attr(*, &quot;unit&quot;)= int 8
+##   ..$ debug        : logi FALSE
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, &quot;class&quot;)= chr [1:2] &quot;element_text&quot; &quot;element&quot;
+##  $ title                     : NULL
+##  $ aspect.ratio              : NULL
+##  $ axis.title                :List of 11
+##   ..$ family       : NULL
+##   ..$ face         : NULL
+##   ..$ colour       : NULL
+##   ..$ size         : num 8
+##   ..$ hjust        : NULL
+##   ..$ vjust        : NULL
+##   ..$ angle        : NULL
+##   ..$ lineheight   : NULL
+##   ..$ margin       : NULL
+##   ..$ debug        : NULL
+##   ..$ inherit.blank: logi FALSE
+##   ..- attr(*, &quot;class&quot;)= chr [1:2] &quot;element_text&quot; &quot;element&quot;
+##  $ axis.title.x              :List of 11
+##   ..$ family       : NULL
+##   ..$ face         : NULL
+##   ..$ colour       : NULL
+##   ..$ size         : NULL
+##   ..$ hjust        : NULL
+##   ..$ vjust        : num 1
+##   ..$ angle        : NULL
+##   ..$ lineheight   : NULL
+##   ..$ margin       : &#39;margin&#39; num [1:4] 2.75points 0points 0points 0points
+##   .. ..- attr(*, &quot;unit&quot;)= int 8
+##   ..$ debug        : NULL
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, &quot;class&quot;)= chr [1:2] &quot;element_text&quot; &quot;element&quot;
+##  $ axis.title.x.top          :List of 11
+##   ..$ family       : NULL
+##   ..$ face         : NULL
+##   ..$ colour       : NULL
+##   ..$ size         : NULL
+##   ..$ hjust        : NULL
+##   ..$ vjust        : num 0
+##   ..$ angle        : NULL
+##   ..$ lineheight   : NULL
+##   ..$ margin       : &#39;margin&#39; num [1:4] 0points 0points 2.75points 0points
+##   .. ..- attr(*, &quot;unit&quot;)= int 8
+##   ..$ debug        : NULL
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, &quot;class&quot;)= chr [1:2] &quot;element_text&quot; &quot;element&quot;
+##  $ axis.title.x.bottom       : NULL
+##  $ axis.title.y              :List of 11
+##   ..$ family       : NULL
+##   ..$ face         : NULL
+##   ..$ colour       : NULL
+##   ..$ size         : NULL
+##   ..$ hjust        : NULL
+##   ..$ vjust        : num 1
+##   ..$ angle        : num 90
+##   ..$ lineheight   : NULL
+##   ..$ margin       : &#39;margin&#39; num [1:4] 0points 2.75points 0points 0points
+##   .. ..- attr(*, &quot;unit&quot;)= int 8
+##   ..$ debug        : NULL
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, &quot;class&quot;)= chr [1:2] &quot;element_text&quot; &quot;element&quot;
+##  $ axis.title.y.left         : NULL
+##  $ axis.title.y.right        :List of 11
+##   ..$ family       : NULL
+##   ..$ face         : NULL
+##   ..$ colour       : NULL
+##   ..$ size         : NULL
+##   ..$ hjust        : NULL
+##   ..$ vjust        : num 0
+##   ..$ angle        : num -90
+##   ..$ lineheight   : NULL
+##   ..$ margin       : &#39;margin&#39; num [1:4] 0points 0points 0points 2.75points
+##   .. ..- attr(*, &quot;unit&quot;)= int 8
+##   ..$ debug        : NULL
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, &quot;class&quot;)= chr [1:2] &quot;element_text&quot; &quot;element&quot;
+##  $ axis.text                 :List of 11
+##   ..$ family       : NULL
+##   ..$ face         : NULL
+##   ..$ colour       : chr &quot;grey30&quot;
+##   ..$ size         : &#39;rel&#39; num 0.8
+##   ..$ hjust        : NULL
+##   ..$ vjust        : NULL
+##   ..$ angle        : NULL
+##   ..$ lineheight   : NULL
+##   ..$ margin       : NULL
+##   ..$ debug        : NULL
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, &quot;class&quot;)= chr [1:2] &quot;element_text&quot; &quot;element&quot;
+##  $ axis.text.x               :List of 11
+##   ..$ family       : NULL
+##   ..$ face         : NULL
+##   ..$ colour       : NULL
+##   ..$ size         : NULL
+##   ..$ hjust        : NULL
+##   ..$ vjust        : num 1
+##   ..$ angle        : NULL
+##   ..$ lineheight   : NULL
+##   ..$ margin       : &#39;margin&#39; num [1:4] 2.2points 0points 0points 0points
+##   .. ..- attr(*, &quot;unit&quot;)= int 8
+##   ..$ debug        : NULL
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, &quot;class&quot;)= chr [1:2] &quot;element_text&quot; &quot;element&quot;
+##  $ axis.text.x.top           :List of 11
+##   ..$ family       : NULL
+##   ..$ face         : NULL
+##   ..$ colour       : NULL
+##   ..$ size         : NULL
+##   ..$ hjust        : NULL
+##   ..$ vjust        : num 0
+##   ..$ angle        : NULL
+##   ..$ lineheight   : NULL
+##   ..$ margin       : &#39;margin&#39; num [1:4] 0points 0points 2.2points 0points
+##   .. ..- attr(*, &quot;unit&quot;)= int 8
+##   ..$ debug        : NULL
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, &quot;class&quot;)= chr [1:2] &quot;element_text&quot; &quot;element&quot;
+##  $ axis.text.x.bottom        : NULL
+##  $ axis.text.y               :List of 11
+##   ..$ family       : NULL
+##   ..$ face         : NULL
+##   ..$ colour       : NULL
+##   ..$ size         : NULL
+##   ..$ hjust        : num 1
+##   ..$ vjust        : NULL
+##   ..$ angle        : NULL
+##   ..$ lineheight   : NULL
+##   ..$ margin       : &#39;margin&#39; num [1:4] 0points 2.2points 0points 0points
+##   .. ..- attr(*, &quot;unit&quot;)= int 8
+##   ..$ debug        : NULL
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, &quot;class&quot;)= chr [1:2] &quot;element_text&quot; &quot;element&quot;
+##  $ axis.text.y.left          : NULL
+##  $ axis.text.y.right         :List of 11
+##   ..$ family       : NULL
+##   ..$ face         : NULL
+##   ..$ colour       : NULL
+##   ..$ size         : NULL
+##   ..$ hjust        : num 0
+##   ..$ vjust        : NULL
+##   ..$ angle        : NULL
+##   ..$ lineheight   : NULL
+##   ..$ margin       : &#39;margin&#39; num [1:4] 0points 0points 0points 2.2points
+##   .. ..- attr(*, &quot;unit&quot;)= int 8
+##   ..$ debug        : NULL
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, &quot;class&quot;)= chr [1:2] &quot;element_text&quot; &quot;element&quot;
+##  $ axis.ticks                : list()
+##   ..- attr(*, &quot;class&quot;)= chr [1:2] &quot;element_blank&quot; &quot;element&quot;
+##  $ axis.ticks.x              : NULL
+##  $ axis.ticks.x.top          : NULL
+##  $ axis.ticks.x.bottom       : NULL
+##  $ axis.ticks.y              : NULL
+##  $ axis.ticks.y.left         : NULL
+##  $ axis.ticks.y.right        : NULL
+##  $ axis.ticks.length         : &#39;simpleUnit&#39; num 2.75points
+##   ..- attr(*, &quot;unit&quot;)= int 8
+##  $ axis.ticks.length.x       : NULL
+##  $ axis.ticks.length.x.top   : NULL
+##  $ axis.ticks.length.x.bottom: NULL
+##  $ axis.ticks.length.y       : NULL
+##  $ axis.ticks.length.y.left  : NULL
+##  $ axis.ticks.length.y.right : NULL
+##  $ axis.line                 : list()
+##   ..- attr(*, &quot;class&quot;)= chr [1:2] &quot;element_blank&quot; &quot;element&quot;
+##  $ axis.line.x               : NULL
+##  $ axis.line.x.top           : NULL
+##  $ axis.line.x.bottom        : NULL
+##  $ axis.line.y               : NULL
+##  $ axis.line.y.left          : NULL
+##  $ axis.line.y.right         : NULL
+##  $ legend.background         : list()
+##   ..- attr(*, &quot;class&quot;)= chr [1:2] &quot;element_blank&quot; &quot;element&quot;
+##  $ legend.margin             : &#39;margin&#39; num [1:4] 5.5points 5.5points 5.5points 5.5points
+##   ..- attr(*, &quot;unit&quot;)= int 8
+##  $ legend.spacing            : &#39;simpleUnit&#39; num 11points
+##   ..- attr(*, &quot;unit&quot;)= int 8
+##  $ legend.spacing.x          : NULL
+##  $ legend.spacing.y          : NULL
+##  $ legend.key                : list()
+##   ..- attr(*, &quot;class&quot;)= chr [1:2] &quot;element_blank&quot; &quot;element&quot;
+##  $ legend.key.size           : &#39;simpleUnit&#39; num 1.2lines
+##   ..- attr(*, &quot;unit&quot;)= int 3
+##  $ legend.key.height         : NULL
+##  $ legend.key.width          : NULL
+##  $ legend.text               :List of 11
+##   ..$ family       : NULL
+##   ..$ face         : NULL
+##   ..$ colour       : NULL
+##   ..$ size         : &#39;rel&#39; num 0.8
+##   ..$ hjust        : NULL
+##   ..$ vjust        : NULL
+##   ..$ angle        : NULL
+##   ..$ lineheight   : NULL
+##   ..$ margin       : NULL
+##   ..$ debug        : NULL
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, &quot;class&quot;)= chr [1:2] &quot;element_text&quot; &quot;element&quot;
+##  $ legend.text.align         : NULL
+##  $ legend.title              :List of 11
+##   ..$ family       : NULL
+##   ..$ face         : NULL
+##   ..$ colour       : NULL
+##   ..$ size         : NULL
+##   ..$ hjust        : num 0
+##   ..$ vjust        : NULL
+##   ..$ angle        : NULL
+##   ..$ lineheight   : NULL
+##   ..$ margin       : NULL
+##   ..$ debug        : NULL
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, &quot;class&quot;)= chr [1:2] &quot;element_text&quot; &quot;element&quot;
+##  $ legend.title.align        : NULL
+##  $ legend.position           : chr &quot;right&quot;
+##  $ legend.direction          : NULL
+##  $ legend.justification      : chr &quot;center&quot;
+##  $ legend.box                : NULL
+##  $ legend.box.just           : NULL
+##  $ legend.box.margin         : &#39;margin&#39; num [1:4] 0cm 0cm 0cm 0cm
+##   ..- attr(*, &quot;unit&quot;)= int 1
+##  $ legend.box.background     : list()
+##   ..- attr(*, &quot;class&quot;)= chr [1:2] &quot;element_blank&quot; &quot;element&quot;
+##  $ legend.box.spacing        : &#39;simpleUnit&#39; num 11points
+##   ..- attr(*, &quot;unit&quot;)= int 8
+##  $ panel.background          : list()
+##   ..- attr(*, &quot;class&quot;)= chr [1:2] &quot;element_blank&quot; &quot;element&quot;
+##  $ panel.border              : list()
+##   ..- attr(*, &quot;class&quot;)= chr [1:2] &quot;element_blank&quot; &quot;element&quot;
+##  $ panel.spacing             : &#39;simpleUnit&#39; num 5.5points
+##   ..- attr(*, &quot;unit&quot;)= int 8
+##  $ panel.spacing.x           : NULL
+##  $ panel.spacing.y           : NULL
+##  $ panel.grid                :List of 6
+##   ..$ colour       : chr &quot;grey92&quot;
+##   ..$ size         : NULL
+##   ..$ linetype     : NULL
+##   ..$ lineend      : NULL
+##   ..$ arrow        : logi FALSE
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, &quot;class&quot;)= chr [1:2] &quot;element_line&quot; &quot;element&quot;
+##  $ panel.grid.major          : NULL
+##  $ panel.grid.minor          : list()
+##   ..- attr(*, &quot;class&quot;)= chr [1:2] &quot;element_blank&quot; &quot;element&quot;
+##  $ panel.grid.major.x        : NULL
+##  $ panel.grid.major.y        : NULL
+##  $ panel.grid.minor.x        : NULL
+##  $ panel.grid.minor.y        : NULL
+##  $ panel.ontop               : logi FALSE
+##  $ plot.background           : list()
+##   ..- attr(*, &quot;class&quot;)= chr [1:2] &quot;element_blank&quot; &quot;element&quot;
+##  $ plot.title                :List of 11
+##   ..$ family       : NULL
+##   ..$ face         : chr &quot;bold&quot;
+##   ..$ colour       : NULL
+##   ..$ size         : num 16
+##   ..$ hjust        : num 0
+##   ..$ vjust        : num 1
+##   ..$ angle        : NULL
+##   ..$ lineheight   : NULL
+##   ..$ margin       : &#39;margin&#39; num [1:4] 0points 0points 5.5points 0points
+##   .. ..- attr(*, &quot;unit&quot;)= int 8
+##   ..$ debug        : NULL
+##   ..$ inherit.blank: logi FALSE
+##   ..- attr(*, &quot;class&quot;)= chr [1:2] &quot;element_text&quot; &quot;element&quot;
+##  $ plot.title.position       : chr &quot;panel&quot;
+##  $ plot.subtitle             :List of 11
+##   ..$ family       : NULL
+##   ..$ face         : NULL
+##   ..$ colour       : NULL
+##   ..$ size         : num 10
+##   ..$ hjust        : num 0
+##   ..$ vjust        : num 1
+##   ..$ angle        : NULL
+##   ..$ lineheight   : NULL
+##   ..$ margin       : &#39;margin&#39; num [1:4] 0points 0points 5.5points 0points
+##   .. ..- attr(*, &quot;unit&quot;)= int 8
+##   ..$ debug        : NULL
+##   ..$ inherit.blank: logi FALSE
+##   ..- attr(*, &quot;class&quot;)= chr [1:2] &quot;element_text&quot; &quot;element&quot;
+##  $ plot.caption              :List of 11
+##   ..$ family       : NULL
+##   ..$ face         : NULL
+##   ..$ colour       : NULL
+##   ..$ size         : &#39;rel&#39; num 0.8
+##   ..$ hjust        : num 1
+##   ..$ vjust        : num 1
+##   ..$ angle        : NULL
+##   ..$ lineheight   : NULL
+##   ..$ margin       : &#39;margin&#39; num [1:4] 5.5points 0points 0points 0points
+##   .. ..- attr(*, &quot;unit&quot;)= int 8
+##   ..$ debug        : NULL
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, &quot;class&quot;)= chr [1:2] &quot;element_text&quot; &quot;element&quot;
+##  $ plot.caption.position     : chr &quot;panel&quot;
+##  $ plot.tag                  :List of 11
+##   ..$ family       : NULL
+##   ..$ face         : NULL
+##   ..$ colour       : NULL
+##   ..$ size         : &#39;rel&#39; num 1.2
+##   ..$ hjust        : num 0.5
+##   ..$ vjust        : num 0.5
+##   ..$ angle        : NULL
+##   ..$ lineheight   : NULL
+##   ..$ margin       : NULL
+##   ..$ debug        : NULL
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, &quot;class&quot;)= chr [1:2] &quot;element_text&quot; &quot;element&quot;
+##  $ plot.tag.position         : chr &quot;topleft&quot;
+##  $ plot.margin               : &#39;margin&#39; num [1:4] 5.5points 5.5points 5.5points 5.5points
+##   ..- attr(*, &quot;unit&quot;)= int 8
+##  $ strip.background          : list()
+##   ..- attr(*, &quot;class&quot;)= chr [1:2] &quot;element_blank&quot; &quot;element&quot;
+##  $ strip.background.x        : NULL
+##  $ strip.background.y        : NULL
+##  $ strip.placement           : chr &quot;inside&quot;
+##  $ strip.text                :List of 11
+##   ..$ family       : NULL
+##   ..$ face         : NULL
+##   ..$ colour       : chr &quot;grey10&quot;
+##   ..$ size         : &#39;rel&#39; num 0.8
+##   ..$ hjust        : NULL
+##   ..$ vjust        : NULL
+##   ..$ angle        : NULL
+##   ..$ lineheight   : NULL
+##   ..$ margin       : &#39;margin&#39; num [1:4] 4.4points 4.4points 4.4points 4.4points
+##   .. ..- attr(*, &quot;unit&quot;)= int 8
+##   ..$ debug        : NULL
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, &quot;class&quot;)= chr [1:2] &quot;element_text&quot; &quot;element&quot;
+##  $ strip.text.x              : NULL
+##  $ strip.text.y              :List of 11
+##   ..$ family       : NULL
+##   ..$ face         : NULL
+##   ..$ colour       : NULL
+##   ..$ size         : NULL
+##   ..$ hjust        : NULL
+##   ..$ vjust        : NULL
+##   ..$ angle        : num -90
+##   ..$ lineheight   : NULL
+##   ..$ margin       : NULL
+##   ..$ debug        : NULL
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, &quot;class&quot;)= chr [1:2] &quot;element_text&quot; &quot;element&quot;
+##  $ strip.switch.pad.grid     : &#39;simpleUnit&#39; num 2.75points
+##   ..- attr(*, &quot;unit&quot;)= int 8
+##  $ strip.switch.pad.wrap     : &#39;simpleUnit&#39; num 2.75points
+##   ..- attr(*, &quot;unit&quot;)= int 8
+##  $ strip.text.y.left         :List of 11
+##   ..$ family       : NULL
+##   ..$ face         : NULL
+##   ..$ colour       : NULL
+##   ..$ size         : NULL
+##   ..$ hjust        : NULL
+##   ..$ vjust        : NULL
+##   ..$ angle        : num 90
+##   ..$ lineheight   : NULL
+##   ..$ margin       : NULL
+##   ..$ debug        : NULL
+##   ..$ inherit.blank: logi TRUE
+##   ..- attr(*, &quot;class&quot;)= chr [1:2] &quot;element_text&quot; &quot;element&quot;
+##  - attr(*, &quot;class&quot;)= chr [1:2] &quot;theme&quot; &quot;gg&quot;
+##  - attr(*, &quot;complete&quot;)= logi TRUE
+##  - attr(*, &quot;validate&quot;)= logi TRUE</code></pre>
+<p>In 2013, a combination of great defense and a slow paced offense made a five point lead in the fourth quarter seem impossible to overcome for the opponent. The Grizzlies drafted Ja Morant in 2019. Morant is a very fast and athletic player who has the ball in his hands a lot, so it makes sense that their pace would increase. After noticing the massive spike in pace and spike in offensive rating in recent years, I wanted to see if those two stats were correlated.</p>
+<pre class="r"><code>ORtgpace &lt;- nbadefense %&gt;% select(Team, Pace, ORtg)</code></pre>
+<pre class="r"><code>ggplot(ORtgpace, aes(x = Pace, y = ORtg)) +
+  geom_point() + 
+  geom_smooth(method=lm, se=TRUE) +
+  labs(x=&quot;Pace&quot;,
+       y=&quot;Offensive Rating&quot;, 
+       title=&quot;A faster pace positively impacts offensive rating.&quot;, 
+       subtitle=&quot;It&#39;s a little better to run a faster paced offense&quot;, 
+       caption=&quot;Source: basketball-reference.com | By Brett Mazour&quot;) + 
+  theme_minimal() + 
+  theme(
+    plot.title = element_text(size = 16, face = &quot;bold&quot;),
+    axis.title = element_text(size = 8), 
+    plot.subtitle = element_text(size=10), 
+    panel.grid.minor = element_blank()
+    )</code></pre>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
+<p><img src="/2021/04/24/how-the-grizzlies-compare-to-other-nba-teams/index_files/figure-html/unnamed-chunk-8-1.png" width="672" />
+The Grizzlies offensive rating improved a moderate amount when their pace increased. After that, I wanted to look at their 2013 season to see how they compared. First, I looked at net rating, only taking the top 10 teams.</p>
+<pre class="r"><code>NRtg &lt;- nba2013 %&gt;% select(Team, NRtg) %&gt;% 
+  top_n(10)</code></pre>
+<pre><code>## Selecting by NRtg</code></pre>
+<pre class="r"><code>ggplot(NRtg, aes(x= reorder(Team, NRtg), weight=NRtg)) + 
+  geom_bar() + 
+  coord_flip() +  
+  labs(
+    x = &quot;Net Rating&quot;,
+    y = &quot;Team&quot;,
+    title = &quot;The Grizzlies landed among the best teams for net rating.&quot;,
+    subtitle = &quot;Their defense carried their net rating in 2013.&quot;,
+    source = &quot;basketball-reference.com | By: Brett Mazour&quot;
+  ) +
+  theme_minimal() + 
+  theme(
+    plot.title = element_text(size = 16, face = &quot;bold&quot;),
+    plot.subtitle = element_text(size = 10),
+    axis.title = element_text(size = 8),
+    panel.grid.minor = element_blank()
+  )</code></pre>
+<p><img src="/2021/04/24/how-the-grizzlies-compare-to-other-nba-teams/index_files/figure-html/unnamed-chunk-10-1.png" width="672" />
+Then, I wanted to look at the individual players. I used their offensive and defensive win shares and compared the Grizzlies top players to other players.</p>
+<pre class="r"><code>ws &lt;- nbaplayers2013 %&gt;% select(Player, DWS, OWS)</code></pre>
+<pre class="r"><code>Allen &lt;- nbaplayers2013 %&gt;% filter(Player == &quot;Tony Allen&quot;)
+Conley &lt;- nbaplayers2013 %&gt;% filter(Player == &quot;Mike Conley&quot;)
+Randolph &lt;- nbaplayers2013 %&gt;% filter(Player == &quot;Zach Randolph&quot;)
+Gasol &lt;- nbaplayers2013 %&gt;% filter(Player == &quot;Marc Gasol&quot;)</code></pre>
+<pre class="r"><code>ggplot(ws, aes(x=DWS, y=OWS)) + 
+  geom_point() +
+  geom_point(data=Allen, aes(x=DWS, y=OWS), color=&quot;yellow&quot;) +
+  geom_point(data=Conley, aes(x=DWS, y=OWS), color=&quot;yellow&quot;) +
+  geom_point(data=Randolph, aes(x=DWS, y=OWS), color=&quot;yellow&quot;) +
+  geom_point(data=Gasol, aes(x=DWS, y=OWS), color=&quot;yellow&quot;) +
+  annotate(&quot;text&quot;, x = 45, y = 68, label = &quot;Conley&quot;, color=&quot;blue&quot;, face=&quot;bold&quot;) +
+  annotate(&quot;text&quot;, x = 50, y = 75, label = &quot;Gasol&quot;, color=&quot;blue&quot;, face=&quot;bold&quot;) +
+  annotate(&quot;text&quot;, x = 45, y = 55, label = &quot;Randolph&quot;, color=&quot;blue&quot;, face=&quot;bold&quot;) +
+  annotate(&quot;text&quot;, x = 42, y = 30, label = &quot;Allen&quot;, color=&quot;blue&quot;, face=&quot;bold&quot;) +
+   labs(
+     x = &quot;Defensive Win Shares&quot;,
+    y = &quot;Offensive Win Shares&quot;,
+    title = &quot;Four Grizzlies player&#39;s win shares were among the best that season.&quot;,
+       subtitle = &quot;Conley, Gasol, Randolph, and Allen gave other teams lots of trouble.&quot;) +
+  theme_minimal() + 
+  theme(
+    plot.title = element_text(size = 16, face = &quot;bold&quot;),
+    plot.subtitle = element_text(size = 11),
+    axis.title = element_text(size = 10),
+    panel.grid.minor = element_blank()
+  )</code></pre>
+<pre><code>## Warning: Ignoring unknown parameters: face
+
+## Warning: Ignoring unknown parameters: face
+
+## Warning: Ignoring unknown parameters: face
+
+## Warning: Ignoring unknown parameters: face</code></pre>
+<p><img src="/2021/04/24/how-the-grizzlies-compare-to-other-nba-teams/index_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+
+    </div>
+  </article>
+
+  
+
+
+</main>
+
+      <footer class="footer">
+        <ul class="footer-links">
+          <li>
+            <a href="/index.xml" type="application/rss+xml" target="_blank">RSS feed</a>
+          </li>
+          <li>
+            <a href="https://gohugo.io/" class="footer-links-kudos">Made with <img src="/images/hugo-logo.png" alt="Img link to Hugo website" width="22" height="22"></a>
+          </li>
+        </ul>
+      </footer>
+
+    </div>
+    
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/r.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/yaml.min.js"></script>
+<script>hljs.configure({languages: []}); hljs.initHighlightingOnLoad();</script>
+
+
+
+    
+<script src="/js/math-code.js"></script>
+<script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+
+    
+  </body>
+</html>
+
